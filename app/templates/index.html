@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold"><i class="fa-solid fa-utensils"></i> 我的食譜庫</h2>
+    </div>
+    <div class="col-md-4 text-md-end mt-2 mt-md-0">
+        <a href="{{ url_for('recipe.create_recipe') }}" class="btn btn-primary px-4">新增食譜</a>
+    </div>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% if recipes %}
+        {% for r in recipes %}
+        <div class="col">
+            <div class="card h-100">
+                {% if r.image_path %}
+                    <img src="{{ url_for('static', filename=r.image_path) }}" class="card-img-top recipe-img" alt="{{ r.title }}">
+                {% else %}
+                    <div class="card-img-top recipe-img bg-light d-flex align-items-center justify-content-center text-muted">
+                        <i class="fa-solid fa-image fa-3x"></i>
+                    </div>
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold">{{ r.title }}</h5>
+                    <p class="card-text text-muted small mb-3">
+                        <i class="fa-regular fa-clock"></i> {{ r.created_at.strftime('%Y-%m-%d %H:%M') }}
+                    </p>
+                    <div class="mt-auto d-flex justify-content-between align-items-center">
+                        <a href="{{ url_for('recipe.detail', id=r.id) }}" class="btn btn-sm btn-outline-primary rounded-pill px-3">查看</a>
+                        <span class="text-danger">
+                            <i class="fa-solid fa-heart"></i> <span id="like-count-{{ r.id }}">{{ r.likes }}</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12 text-center py-5">
+            <h4 class="text-muted">目前尚無食譜，來新增第一道菜吧！</h4>
+            <a href="{{ url_for('recipe.create_recipe') }}" class="btn btn-primary mt-3">立即新增</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

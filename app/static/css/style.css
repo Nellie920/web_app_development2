@@ -1,0 +1,94 @@
+:root {
+  --primary-color: #ffb6c1; /* Light pink */
+  --secondary-color: #ffe4e1; /* Misty rose */
+  --bg-color: #fffaf0; /* Floral white */
+  --text-color: #5c4a4d;
+  --border-radius: 20px;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+  background-color: var(--primary-color) !important;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.navbar-brand, .nav-link {
+  color: #fff !important;
+  font-weight: bold;
+}
+
+.card {
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: #fff;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+  transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  border-radius: 25px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn-primary:hover {
+  background-color: #ff9fb0;
+  border-color: #ff9fb0;
+}
+
+.btn-danger {
+  border-radius: 25px;
+}
+
+.btn-secondary {
+  border-radius: 25px;
+}
+
+.form-control {
+  border-radius: 15px;
+  border: 2px solid var(--secondary-color);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(255, 182, 193, 0.25);
+}
+
+.recipe-img {
+  object-fit: cover;
+  height: 200px;
+  width: 100%;
+}
+
+.recipe-detail-img {
+  border-radius: var(--border-radius);
+  max-height: 400px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.comment-box {
+  background-color: #fff;
+  border-radius: 15px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+}
+
+.alert {
+  border-radius: 15px;
+}

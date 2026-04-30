@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- 食譜標頭與圖片 -->
+        <div class="card mb-4">
+            {% if recipe.image_path %}
+                <img src="{{ url_for('static', filename=recipe.image_path) }}" class="card-img-top recipe-detail-img p-2" alt="{{ recipe.title }}">
+            {% endif %}
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h2 class="card-title fw-bold">{{ recipe.title }}</h2>
+                    <div>
+                        <button class="btn btn-outline-danger rounded-pill like-btn" data-id="{{ recipe.id }}">
+                            <i class="fa-solid fa-heart"></i> <span id="detail-like-count">{{ recipe.likes }}</span>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-muted small">發布時間：{{ recipe.created_at.strftime('%Y-%m-%d %H:%M') }}</p>
+
+                <!-- 操作按鈕 -->
+                <div class="mb-4">
+                    <a href="{{ url_for('recipe.edit_recipe', id=recipe.id) }}" class="btn btn-primary btn-sm me-2">編輯食譜</a>
+                    <form action="{{ url_for('recipe.delete_recipe', id=recipe.id) }}" method="POST" class="d-inline" onsubmit="return confirm('確定要刪除這篇食譜嗎？');">
+                        <button type="submit" class="btn btn-danger btn-sm">刪除</button>
+                    </form>
+                    <button class="btn btn-secondary btn-sm ms-2" onclick="copyUrl()">分享網址</button>
+                </div>
+
+                <hr>
+
+                <!-- 材料 -->
+                <h4 class="fw-bold text-primary mt-4"><i class="fa-solid fa-basket-shopping"></i> 材料</h4>
+                <div class="bg-light p-3 rounded-4 mb-4" style="white-space: pre-wrap;">{{ recipe.materials }}</div>
+
+                <!-- 步驟 -->
+                <h4 class="fw-bold text-primary"><i class="fa-solid fa-list-ol"></i> 步驟</h4>
+                <div class="bg-light p-3 rounded-4" style="white-space: pre-wrap;">{{ recipe.steps }}</div>
+            </div>
+        </div>
+
+        <!-- 留言區 -->
+        <h4 class="fw-bold mb-3"><i class="fa-regular fa-comments"></i> 留言板 ({{ comments|length }})</h4>
+        
+        <form action="{{ url_for('recipe.add_comment', id=recipe.id) }}" method="POST" class="mb-4">
+            <div class="form-floating mb-3">
+                <textarea class="form-control" name="content" id="content" style="height: 100px" required></textarea>
+                <label for="content">留下你的評論...</label>
+            </div>
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary px-4">送出留言</button>
+            </div>
+        </form>
+
+        <div class="comments-list">
+            {% for c in comments %}
+            <div class="comment-box">
+                <p class="mb-1" style="white-space: pre-wrap;">{{ c.content }}</p>
+                <small class="text-muted">{{ c.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+            {% else %}
+            <p class="text-muted text-center py-3">目前還沒有留言，來搶頭香吧！</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // 複製網址功能
+    function copyUrl() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('網址已複製！');
+        });
+    }
+
+    // 按讚 AJAX
+    document.querySelector('.like-btn').addEventListener('click', function() {
+        const recipeId = this.getAttribute('data-id');
+        fetch(`/recipe/${recipeId}/like`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.likes !== undefined) {
+                document.getElementById('detail-like-count').innerText = data.likes;
+            }
+        })
+        .catch(err => console.error(err));
+    });
+</script>
+{% endblock %}
