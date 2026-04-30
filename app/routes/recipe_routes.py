@@ -1,51 +1,49 @@
-from flask import render_template, request, redirect, url_for, jsonify
-from . import recipe_bp
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+
+recipe_bp = Blueprint('recipe', __name__)
 
 @recipe_bp.route('/')
+@recipe_bp.route('/recipes')
 def index():
     """
-    食譜列表 (首頁)
-    查詢所有食譜並渲染 index.html
-    """
-    pass
-
-@recipe_bp.route('/recipe/new', methods=['GET'])
-def new_recipe():
-    """
-    新增食譜頁面
-    渲染 recipe_form.html
-    """
-    pass
-
-@recipe_bp.route('/recipe/new', methods=['POST'])
-def create_recipe():
-    """
-    建立食譜
-    接收表單資料，儲存圖片，存入資料庫後重導向至首頁
+    首頁 (食譜列表)
+    - 輸入：無
+    - 處理邏輯：查詢所有 Recipe，依照建立時間反向排序
+    - 輸出：渲染 index.html，傳入 recipes 變數
     """
     pass
 
 @recipe_bp.route('/recipe/<int:id>')
-def recipe_detail(id):
+def detail(id):
     """
-    食譜詳細頁
-    根據 id 查詢單筆食譜與關聯留言，渲染 recipe_detail.html
+    查看食譜詳細
+    - 輸入：URL 參數 id
+    - 處理邏輯：以 ID 查詢 Recipe 以及關聯的 Comment
+    - 輸出：渲染 detail.html，傳入 recipe 與 comments 變數
     """
     pass
 
-@recipe_bp.route('/recipe/<int:id>/edit', methods=['GET'])
+@recipe_bp.route('/recipe/new', methods=['GET', 'POST'])
+def create_recipe():
+    """
+    新增食譜
+    - 輸入：GET(無), POST(表單 title, materials, steps, 圖片 image)
+    - 處理邏輯：
+        - GET: 準備空表單狀態
+        - POST: 驗證必填，儲存圖片，建立 Recipe 寫入 DB
+    - 輸出：GET 渲染 edit.html，POST 重導向至首頁
+    """
+    pass
+
+@recipe_bp.route('/recipe/<int:id>/edit', methods=['GET', 'POST'])
 def edit_recipe(id):
     """
-    編輯食譜頁面
-    根據 id 查詢食譜資料，渲染 recipe_form.html 並帶入預設值
-    """
-    pass
-
-@recipe_bp.route('/recipe/<int:id>/update', methods=['POST'])
-def update_recipe(id):
-    """
-    更新食譜
-    接收表單資料更新資料庫，完成後重導向至詳細頁
+    編輯食譜
+    - 輸入：GET(URL 參數 id), POST(URL 參數 id, 表單資料與可選圖片)
+    - 處理邏輯：
+        - GET: 查詢 Recipe，填入表單初始值
+        - POST: 更新 Recipe 屬性，若有新圖片則替換並儲存至 DB
+    - 輸出：GET 渲染 edit.html，POST 重導向至詳細頁
     """
     pass
 
@@ -53,7 +51,9 @@ def update_recipe(id):
 def delete_recipe(id):
     """
     刪除食譜
-    刪除特定食譜與關聯圖片，完成後重導向至首頁
+    - 輸入：URL 參數 id
+    - 處理邏輯：查詢 Recipe，刪除相關 Comment 與 Recipe 及本地圖片
+    - 輸出：重導向至首頁
     """
     pass
 
@@ -61,7 +61,9 @@ def delete_recipe(id):
 def add_comment(id):
     """
     新增留言
-    接收留言內容存入資料庫，重導向至詳細頁
+    - 輸入：URL 參數 id, 表單 content
+    - 處理邏輯：建立 Comment 關聯 recipe_id，存入 DB
+    - 輸出：重導向至詳細頁
     """
     pass
 
@@ -69,6 +71,8 @@ def add_comment(id):
 def like_recipe(id):
     """
     按讚食譜
-    將食譜的讚數加 1，回傳 JSON 格式的最新讚數
+    - 輸入：URL 參數 id
+    - 處理邏輯：找到 Recipe，將 likes 欄位加一
+    - 輸出：回傳 JSON {"likes": 新數量}
     """
     pass
